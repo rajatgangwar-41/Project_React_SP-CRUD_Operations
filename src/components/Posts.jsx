@@ -6,7 +6,7 @@ import Form from './Form';
 const Posts = () => {
 
   const [data, setData] = useState([])
-  const [newFormData, setNewFormData] = useState([])
+  const [editFormData, setEditFormData] = useState({})
 
   const getPostData = async () => {
     const res = await getPost();
@@ -30,7 +30,7 @@ const Posts = () => {
   }
 
   const handleEditButton = (currElement) => {
-    setNewFormData(currElement)
+    setEditFormData(currElement)
   }
 
   useEffect(() => {
@@ -43,8 +43,8 @@ const Posts = () => {
         <Form 
           data={data} 
           setData={setData}
-          newFormData={newFormData}
-          setNewFormData={setNewFormData}
+          editFormData={editFormData}
+          setEditFormData={setEditFormData}
         />
       </section>
       <section className='section-post'>

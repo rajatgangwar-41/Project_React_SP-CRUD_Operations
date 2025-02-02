@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react"
-import { postData } from "../API/postAPI";
+import { postData, updateData } from "../API/postAPI";
 
-// eslint-disable-next-line react/prop-types
-const Form = ({data, setData, newFormData, setNewFormData}) => {
+const Form = ({data, setData, editFormData, setEditFormData}) => {
 
   const [formData, setFormData] = useState({
     title: "",
@@ -35,17 +34,43 @@ const Form = ({data, setData, newFormData, setNewFormData}) => {
     }
   }
 
+  const updatePostData = async () => {
+    try{
+      const res = await updateData(editFormData.id, formData)
+      if(res.status === 200){
+        setData((prevData) => {
+          return prevData.map((currElement) => {
+            return currElement.id === res.data.id ? res.data : currElement
+          })
+        })
+        setFormData({title: "", body: ""})
+        setEditFormData({})
+        console.log(`Edited Data ${res.data.id}`, res.data)
+      }
+    } catch(err){
+      console.log(err)
+    }
+  }
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    addPostData();
+    const action = e.nativeEvent.submitter.value
+
+    if(action === "Add")
+      addPostData();
+    
+    else
+      updatePostData()
   }
 
   useEffect(() => {
     setFormData({
-      title: newFormData.title || "",
-      body: newFormData.body || "",
+      title: editFormData.title || "",
+      body: editFormData.body || "",
     })
-  }, [newFormData])
+  }, [editFormData])
+
+  const isEmpty = Object.entries(editFormData).length == 0
 
   return (
     <form onSubmit={handleFormSubmit}>
@@ -74,7 +99,7 @@ const Form = ({data, setData, newFormData, setNewFormData}) => {
           onChange={handleInputChange}
         />
       </div>
-      <button type="submit">Add</button>
+      <button type="submit" value={isEmpty ? "Add" : "Edit"}>{isEmpty ? "Add" : "Edit"}</button>
     </form>
   )
 }
