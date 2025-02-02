@@ -1,8 +1,9 @@
-import { useState } from "react"
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react"
 import { postData } from "../API/postAPI";
 
 // eslint-disable-next-line react/prop-types
-const Form = ({data, setData}) => {
+const Form = ({data, setData, newFormData, setNewFormData}) => {
 
   const [formData, setFormData] = useState({
     title: "",
@@ -38,6 +39,13 @@ const Form = ({data, setData}) => {
     e.preventDefault();
     addPostData();
   }
+
+  useEffect(() => {
+    setFormData({
+      title: newFormData.title || "",
+      body: newFormData.body || "",
+    })
+  }, [newFormData])
 
   return (
     <form onSubmit={handleFormSubmit}>

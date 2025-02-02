@@ -6,6 +6,7 @@ import Form from './Form';
 const Posts = () => {
 
   const [data, setData] = useState([])
+  const [newFormData, setNewFormData] = useState([])
 
   const getPostData = async () => {
     const res = await getPost();
@@ -28,6 +29,10 @@ const Posts = () => {
     }
   }
 
+  const handleEditButton = (currElement) => {
+    setNewFormData(currElement)
+  }
+
   useEffect(() => {
     getPostData();
   }, [])
@@ -35,7 +40,12 @@ const Posts = () => {
   return (
     <>
       <section className='section-form'>
-        <Form data={data} setData={setData}/>
+        <Form 
+          data={data} 
+          setData={setData}
+          newFormData={newFormData}
+          setNewFormData={setNewFormData}
+        />
       </section>
       <section className='section-post'>
         <ol>
@@ -46,7 +56,7 @@ const Posts = () => {
                 <li key={id}>
                   <p>Title: {title}</p>
                   <p>Body: {body}</p>
-                  <button>Edit</button>
+                  <button onClick={() => handleEditButton(currElement)}>Edit</button>
                   <button className='btn-delete' onClick={()=> handleDeletePost(id) }>Delete</button>
                 </li>
               )
